@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\PassportAuthController;
+use App\Http\Controllers\API\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function () {
+    Route::get('get-user', [PassportAuthController::class, 'userInfo']);
 });
+
+Route::resource('users', UserController::class);
+
+// Filter multiple fields (Optional parameter)
+Route::get('/users/{name?}/{email?}', [UserController::class, 'filter']);
+
+// import file
+Route::post('/upload-content',[UserController::class,'uploadContent'])->name('import.content');
